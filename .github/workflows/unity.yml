@@ -1,0 +1,126 @@
+---
+name: Unity tests
+
+on:
+  pull_request: {}
+  push: {branches: [main]}
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  build:
+    name: Build ${{ matrix.outputName }} for ${{ matrix.targetPlatform }} with ${{ matrix.vrsdk }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - targetPlatform: Android
+            vrsdk: Oculus
+            outputName: com.Icosa.OpenBrush-github.apk
+            extraoptions: -setDefaultPlatformTextureFormat astc -btb-github
+          - targetPlatform: StandaloneWindows64
+            vrsdk: SteamVR
+            outputName: OpenBrush.exe
+            extraoptions:
+          - targetPlatform: StandaloneWindows64
+            vrsdk: Monoscopic
+            outputName: OpenBrush.exe
+            extraoptions:
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true  # We don't use LFS, but it adds no time, and leave it here in case we do at some point later
+
+      - name: Install Oculus unity package
+        if: matrix.vrsdk == 'Oculus'
+        run: |
+          # version 23.1
+          # Code courtesy of Jonathan Perret, released freely. Download the package and manually extract it to Assets/Oculus. We only need VR and Platform.
+          wget -q https://securecdn.oculus.com/binaries/download/?id=3884880558189851 -O package.tmp
+          mkdir tmp
+          tar -C tmp -xzf package.tmp
+          find tmp -type f | xargs chmod a-x
+          for pn in tmp/*/pathname; do
+            id=${pn%/*}
+            id=${id#*/}
+            p=$(head -1 $pn)
+            d=${p%/*}
+            mkdir -p "tmp/$d"
+            [ -f "tmp/$id/asset" ] && cp -v "tmp/$id/asset" "tmp/$p"
+            cp "tmp/$id/asset.meta" "tmp/${p}.meta"
+          done
+          mkdir -p Assets/Oculus
+          cp -R tmp/Assets/Oculus/VR Assets/Oculus/
+          cp -R tmp/Assets/Oculus/Platform Assets/Oculus/
+          rm -rf tmp package.tmp
+          ln -s ../../Assets/Oculus/VR/Editor/OVRPluginUpdater.cs Assets/Editor/
+
+      - name: Install TextMesh Pro package
+        run: |
+          # version 2.0.1; must be updated if the version changes
+          # This replaces the GUI's "Window -> TextMesh Pro -> Import TMP Essential Resources". I don't know why Unity makes this sort of thing so hard!
+          mkdir tmp.plugin
+          wget -q https://download.packages.unity.com/com.unity.textmeshpro/-/com.unity.textmeshpro-2.0.1.tgz -O tmp.plugin/plugin.tgz
+          tar -C tmp.plugin -xzf tmp.plugin/plugin.tgz
+          mkdir tmp.package
+          tar -C tmp.package -xzf 'tmp.plugin/package/Package Resources/TMP Essential Resources.unitypackage'
+          for pn in tmp.package/*/pathname; do
+            id=${pn%/*}
+            id=${id#*/}
+            p=$(head -1 $pn)
+            d=${p%/*}
+            mkdir -p "tmp.package/$d"
+            [ -f "tmp.package/$id/asset" ] && cp -v "tmp.package/$id/asset" "tmp.package/$p"
+            cp "tmp.package/$id/asset.meta" "tmp.package/${p}.meta"
+          done
+          mkdir -p 'Assets/TextMesh Pro'
+          cp -R 'tmp.package/Assets/TextMesh Pro' Assets/
+          rm -rf tmp.plugin tmp.package
+
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          # Adding the sha ensures that we always save it (by default cache hits are not saved, even if it's just a base and it's updated, which is not what we want)
+          key: Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-${{ github.sha }}
+          # When we load, take the 'latest' one that matches. Worst case, it's slightly out of date. Still better than nothing.
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-
+            Library-${{ matrix.targetPlatform }}-
+
+      - name: Update Oculus OVR Plugin
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        if: matrix.vrsdk == 'Oculus'
+        with:
+          unityVersion: 2019.4.18f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: OVRPluginUpdater.BatchmodePluginUpdate  # We created this symlink above
+
+      - name: Build project
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        with:
+          allowDirtyBuild: true
+          unityVersion: 2019.4.18f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/${{ matrix.outputName }} ${{ matrix.extraoptions }}'
+          buildMethod: BuildTiltBrush.CommandLine
+
+      - name: Upload build/
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
+          path: build
+
+      - name: Upload the full tree for debugging
+        uses: actions/upload-artifact@v2
+        if: false
+        with:
+          name: Tree-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
+          path: |
+            .
+            !Library
+            !build
+            !.git
