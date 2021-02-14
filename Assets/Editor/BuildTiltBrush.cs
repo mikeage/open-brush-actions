@@ -99,7 +99,7 @@ static class BuildTiltBrush {
     new CopyRequest("Support/ThirdParty/GeneratedThirdPartyNotices.txt", "NOTICE") {
         omitForAndroid=true },
     new CopyRequest(FfmpegPipe.kFfmpegDir) { omitForAndroid=true },
-    new CopyRequest("Support/tiltasaurus.json"),
+    new CopyRequest("Support/Tiltasaurus.json"),
     new CopyRequest("Support/README.txt") { omitForAndroid=true },
     new CopyRequest("Support/exportManifest.json"),
     new CopyRequest("Support/bin/renderVideo.cmd") { omitForAndroid=true },
@@ -634,6 +634,8 @@ static class BuildTiltBrush {
           tiltOptions.UnityOptions |= AsEnum(args[++i], BuildOptions.None);
         } else if (args[i] == "-btb-target") {
           target = AsEnum<BuildTarget>(args[++i]);
+        } else if (args[i] == "-customBuildPath") {
+          tiltOptions.Location = args[++i];
         } else if (args[i] == "-btb-out") {
           tiltOptions.Location = args[++i];
         } else if (args[i] == "-btb-stamp") {
@@ -651,6 +653,12 @@ static class BuildTiltBrush {
         } else if (args[i] == "-btb-increment-bundle-version") {
           // Don't restore this, because user might want to check in this change?
           PlayerSettings.Android.bundleVersionCode += 1;
+        } else if (args[i] == "-buildVersion") {
+          // TODO: do we want to do anything with this? Can we use it instead of the version string set externally?
+          i++;
+        } else if (args[i] == "-androidVersionCode" || args[i] == "-androidKeystoreName" || args[i] == "-androidKeystorePass" || args[i] == "-androidKeyaliasName" || args[i] == "-androidKeyaliasPass") {
+          // TODO: do we want to do anything with these? 
+          i++;
         } else {
           Die(3, "Unknown argument {0}", args[i]);
           EditorApplication.Exit(3);

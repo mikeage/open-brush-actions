@@ -1,0 +1,61 @@
+name: Unity tests
+
+on:
+  pull_request: {}
+  #push: { branches: [main] }
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Install Oculus unity package
+        run: |
+          # version 23.1
+          wget -q https://securecdn.oculus.com/binaries/download/?id=3884880558189851 -O package.tmp
+          mkdir tmp
+          tar -C tmp -xzf package.tmp
+          find tmp -type f | xargs chmod a-x
+          for pn in tmp/*/pathname; do
+            id=${pn%/*}
+            id=${id#*/}
+            p=$(head -1 $pn)
+            d=${p%/*}
+            mkdir -p "tmp/$d"
+            [ -f "tmp/$id/asset" ] && cp -v "tmp/$id/asset" "tmp/$p"
+            cp "tmp/$id/asset.meta" "tmp/${p}.meta"
+          done
+          mkdir -p Assets/Oculus
+          cp -R tmp/Assets/Oculus/VR Assets/Oculus/
+          cp -R tmp/Assets/Oculus/Platform Assets/Oculus/
+          rm -rf tmp package.tmp
+
+      # Cache
+      - uses: actions/cache@v1.1.0
+        with:
+          path: Library
+          key: Library
+
+      # Build
+      - name: Build project
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        with:
+          unityVersion: 2019.4.18f1
+          targetPlatform: Android
+          customParameters: '-btb-target Android -btb-display Oculus -btb-out /github/workspace/build/Android/Android.apk'
+          buildMethod: BuildTiltBrush.CommandLine
+
+      # Output
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Build
+          path: build
