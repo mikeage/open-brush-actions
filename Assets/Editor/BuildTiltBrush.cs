@@ -608,6 +608,13 @@ static class BuildTiltBrush {
     };
     string keystoreName = null;
     string keyaliasName = null;
+
+
+#if OCULUS_SUPPORTED
+      // Call this once to create the file
+      OVRProjectConfig defaultOculusProjectConfig = OVRProjectConfig.GetProjectConfig();
+#endif
+
     {
       string[] args = Environment.GetCommandLineArgs();
       int i = 0;
