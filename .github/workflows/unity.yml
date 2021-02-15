@@ -74,3 +74,11 @@ jobs:
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Tree-${{ matrix.targetPlatform }}
+          path: |
+            .
+            !build
+            !.git
