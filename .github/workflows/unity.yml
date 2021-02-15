@@ -90,9 +90,11 @@ jobs:
           path: build
 
       - uses: actions/upload-artifact@v2
+        if: false
         with:
           name: Tree-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
           path: |
             .
+            !Library
             !build
             !.git
