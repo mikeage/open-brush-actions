@@ -56,7 +56,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}
+          # Adding the sha ensures that we always save it... but we'll load the 'latest' one
+          key: Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-${{ github.sha }}
+          restore-keys: Library-${{ matrix.targetPlatform }}
 
       # Build
       - name: Build project
