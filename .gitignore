@@ -71,10 +71,6 @@
 # m_DebugWebRequest creates this
 /Requests
 
-# TextMesh Pro from Unity
-/Assets/TextMesh\ Pro
-/Assets/TextMesh\ Pro.meta
-
 # Google process
 .gitbugtraq
 
