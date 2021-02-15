@@ -29,9 +29,38 @@ using UnityEditor.Build.Reporting;
 using UnityEditor.iOS.Xcode;
 #endif
 using UnityEditor.SceneManagement;
+using UnityEditor.PackageManager.Requests;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
+
 using Environment = System.Environment;
+
+// Copied from https://docs.unity3d.com/Manual/upm-api.html
+static class AddTextMeshPro
+{
+   static AddRequest Request;
+  
+   public static void Add()
+   {
+	   Request = Client.Add("com.unity.textmeshpro@2.0.1");
+	   EditorApplication.update += Progress;
+   }
+
+   static void Progress()
+   {
+	   if (Request.IsCompleted)
+	   {
+		   if (Request.Status == StatusCode.Success)
+			   Debug.Log("Installed: " + Request.Result.packageId);
+		   else if (Request.Status >= StatusCode.Failure)
+			   Debug.Log(Request.Error.message);
+
+		   EditorApplication.update -= Progress;
+	   }
+   }
+}
+
 
 // All output from this class is prefixed with "_btb_" to facilitate extracting
 // it from Unity's very noisy and spammy Editor.log file.
@@ -614,6 +643,7 @@ static class BuildTiltBrush {
       // Call this once to create the file
       OVRProjectConfig defaultOculusProjectConfig = OVRProjectConfig.GetProjectConfig();
 #endif
+	AddTextMeshPro.Add();
 
     {
       string[] args = Environment.GetCommandLineArgs();
