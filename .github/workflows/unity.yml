@@ -1,16 +1,28 @@
+---
 name: Unity tests
 
 on:
   pull_request: {}
-  #push: { branches: [main] }
+  # push: { branches: [main] }
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
   build:
-    name: Build
+    name: Build OpenBrush.${{ matrix.extension }} for ${{ matrix.targetPlatform }} with ${{ matrix.vrsdk }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - targetPlatform: Android
+            vrsdk: Oculus
+            extension: apk
+          - targetPlatform: StandaloneWindows64
+            vrsdk: SteamVR
+            extension: exe
+
     steps:
       # Checkout
       - name: Checkout repository
@@ -19,6 +31,7 @@ jobs:
           lfs: true
 
       - name: Install Oculus unity package
+        if: matrix.vrsdk == 'Oculus'
         run: |
           # version 23.1
           wget -q https://securecdn.oculus.com/binaries/download/?id=3884880558189851 -O package.tmp
@@ -43,19 +56,19 @@ jobs:
       - uses: actions/cache@v1.1.0
         with:
           path: Library
-          key: Library
+          key: Library-${{ matrix.targetPlatform }}
 
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v2.0-alpha-6
         with:
           unityVersion: 2019.4.18f1
-          targetPlatform: Android
-          customParameters: '-btb-target Android -btb-display Oculus -btb-out /github/workspace/build/Android/Android.apk'
+          targetPlatform: ${{ matrix.targetPlatform }}
+          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }}'
           buildMethod: BuildTiltBrush.CommandLine
 
       # Output
       - uses: actions/upload-artifact@v1
         with:
-          name: Build
+          name: Build-${{ matrix.targetPlatform }}
           path: build
