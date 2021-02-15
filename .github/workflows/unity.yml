@@ -22,6 +22,9 @@ jobs:
           - targetPlatform: StandaloneWindows64
             vrsdk: SteamVR
             extension: exe
+          - targetPlatform: StandaloneWindows64
+            vrsdk: Monoscopic
+            extension: exe
 
     steps:
       # Checkout
@@ -58,7 +61,9 @@ jobs:
           path: Library
           # Adding the sha ensures that we always save it... but we'll load the 'latest' one
           key: Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-${{ github.sha }}
-          restore-keys: Library-${{ matrix.targetPlatform }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-
+            Library-${{ matrix.targetPlatform }}-
 
       # Build
       - name: Build project
@@ -81,12 +86,12 @@ jobs:
       # Output
       - uses: actions/upload-artifact@v2
         with:
-          name: Build-${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
           path: build
 
       - uses: actions/upload-artifact@v2
         with:
-          name: Tree-${{ matrix.targetPlatform }}
+          name: Tree-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
           path: |
             .
             !build
