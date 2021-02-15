@@ -69,6 +69,15 @@ jobs:
           customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }}'
           buildMethod: BuildTiltBrush.CommandLine
 
+      - name: Show local changes
+        run: |
+          echo "git status"
+          git status
+          echo "git diff"
+          git diff
+          echo "git status --ignored"
+          git status --ignored
+
       # Output
       - uses: actions/upload-artifact@v2
         with:
