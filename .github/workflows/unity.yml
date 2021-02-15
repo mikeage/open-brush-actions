@@ -53,7 +53,7 @@ jobs:
           rm -rf tmp package.tmp
 
       # Cache
-      - uses: actions/cache@v1.1.0
+      - uses: actions/cache@v2
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
@@ -68,7 +68,7 @@ jobs:
           buildMethod: BuildTiltBrush.CommandLine
 
       # Output
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build
