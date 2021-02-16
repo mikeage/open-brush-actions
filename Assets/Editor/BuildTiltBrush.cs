@@ -609,10 +609,10 @@ static class BuildTiltBrush {
     string keystoreName = null;
     string keyaliasName = null;
 
-
 #if OCULUS_SUPPORTED
-      // Call this once to create the file
-      OVRProjectConfig defaultOculusProjectConfig = OVRProjectConfig.GetProjectConfig();
+    // Call these once to create the files. Normally (i.e., in a GUI build), they're created with [UnityEditor.InitializeOnLoad], but in case they're missing, like in CI, make sure they're there!
+    OVRProjectConfig defaultOculusProjectConfig = OVRProjectConfig.GetProjectConfig();
+    string useless_app_id = Assets.Oculus.VR.Editor.OVRPlatformToolSettings.AppID;
 #endif
 
     {
