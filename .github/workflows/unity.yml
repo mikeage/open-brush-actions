@@ -19,12 +19,15 @@ jobs:
           - targetPlatform: Android
             vrsdk: Oculus
             extension: apk
+            extraoptions: -setDefaultPlatformTextureFormat astc
           - targetPlatform: StandaloneWindows64
             vrsdk: SteamVR
             extension: exe
+            extraoptions:
           - targetPlatform: StandaloneWindows64
             vrsdk: Monoscopic
             extension: exe
+            extraoptions: ''
 
     steps:
       # Checkout
@@ -71,7 +74,7 @@ jobs:
         with:
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
-          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }}'
+          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }} ${{ matrix.extraoptions }}'
           buildMethod: BuildTiltBrush.CommandLine
 
       # Build
@@ -83,7 +86,7 @@ jobs:
           allowDirtyBuild: true
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
-          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }}'
+          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }} ${{ matrix.extraoptions }}'
           buildMethod: BuildTiltBrush.CommandLine
 
       - name: Show local changes
