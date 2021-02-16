@@ -74,6 +74,17 @@ jobs:
           customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }}'
           buildMethod: BuildTiltBrush.CommandLine
 
+      # Build
+      # (experiment; maybe this will help with the imports)
+      - name: Rebuild project
+        if: matrix.vrsdk == 'Oculus'
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        with:
+          unityVersion: 2019.4.18f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }}'
+          buildMethod: BuildTiltBrush.CommandLine
+
       - name: Show local changes
         run: |
           echo "git status"
