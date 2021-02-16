@@ -82,14 +82,20 @@ jobs:
           git diff
           echo "git status --ignored"
           git status --ignored
+          echo "OVRBuildConfig.asset"
+          [ -f Assets/Resources/OVRBuildConfig.asset ] && cat Assets/Resources/OVRBuildConfig.asset || true
+          echo "OVRPlatformToolSettings.asset"
+          [ -f Assets/Resources/OVRPlatformToolSettings.asset ] && cat Assets/Resources/OVRPlatformToolSettings.asset || true
 
       # Output
-      - uses: actions/upload-artifact@v2
+      - name: Upload build/
+        uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
           path: build
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload the full tree
+        uses: actions/upload-artifact@v2
         if: false
         with:
           name: Tree-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
