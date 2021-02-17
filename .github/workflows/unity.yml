@@ -80,7 +80,8 @@ jobs:
       # Build
       # (experiment; maybe this will help with the imports)
       - name: Rebuild project
-        if: matrix.vrsdk == 'Oculus'
+        # if: matrix.vrsdk == 'Oculus'
+        if: false
         uses: game-ci/unity-builder@v2.0-alpha-6
         with:
           allowDirtyBuild: true
