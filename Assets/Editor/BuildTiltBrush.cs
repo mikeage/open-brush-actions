@@ -613,11 +613,6 @@ static class BuildTiltBrush {
     // Call these once to create the files. Normally (i.e., in a GUI build), they're created with [UnityEditor.InitializeOnLoad], but in case they're missing, like in CI, make sure they're there!
     OVRProjectConfig defaultOculusProjectConfig = OVRProjectConfig.GetProjectConfig();
     string useless_app_id = Assets.Oculus.VR.Editor.OVRPlatformToolSettings.AppID;
-    string useless_app_id2 = Oculus.Platform.PlatformSettings.AppID;
-    bool useless_set_prefs_for_utilities= OVREngineConfigurationUpdater.setPrefsForUtilities;
-    bool useless_is_ovrplugin_openxr_activated = OVRPluginUpdater.IsOVRPluginOpenXRActivated();
-    string useless_android_sdk_path = OVRConfig.GetAndroidSDKPath(false);
-    bool useless_auto_increment_version = OVRGradleGeneration.autoIncrementVersion;
 #endif
 
     {
