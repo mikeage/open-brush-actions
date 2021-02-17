@@ -69,14 +69,14 @@ jobs:
             Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-
             Library-${{ matrix.targetPlatform }}-
 
-      - name: Update Oculus
+      - name: Update Oculus Plugin
         uses: game-ci/unity-builder@v2.0-alpha-6
+        if: matrix.vrsdk == 'Oculus'
         with:
-          if: matrix.vrsdk == 'Oculus'
           allowDirtyBuild: true
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildMethod: OVRPluginUpdater.BatchmodePluginUpdate()
+          buildMethod: OVRPluginUpdater.BatchmodePluginUpdate
 
       # Build
       - name: Build project
