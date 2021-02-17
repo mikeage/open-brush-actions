@@ -666,6 +666,8 @@ static class BuildTiltBrush {
         } else if (args[i] == "-androidVersionCode" || args[i] == "-androidKeystoreName" || args[i] == "-androidKeystorePass" || args[i] == "-androidKeyaliasName" || args[i] == "-androidKeyaliasPass") {
           // TODO: do we want to do anything with these? 
           i++;
+        } else if (args[i] == "-setDefaultPlatformTextureFormat") {
+          i++;
         } else {
           Die(3, "Unknown argument {0}", args[i]);
           EditorApplication.Exit(3);
