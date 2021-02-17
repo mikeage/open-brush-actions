@@ -57,6 +57,7 @@ jobs:
           cp -R tmp/Assets/Oculus/VR Assets/Oculus/
           cp -R tmp/Assets/Oculus/Platform Assets/Oculus/
           rm -rf tmp package.tmp
+          ln -s ../../Assets/Oculus/VR/Editor/OVRPluginUpdater.cs Assets/Editor/
 
       # Cache
       - uses: actions/cache@v2
@@ -67,6 +68,15 @@ jobs:
           restore-keys: |
             Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-
             Library-${{ matrix.targetPlatform }}-
+
+      - name: Update Oculus
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        with:
+          if: matrix.vrsdk == 'Oculus'
+          allowDirtyBuild: true
+          unityVersion: 2019.4.18f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: OVRPluginUpdater.BatchmodePluginUpdate()
 
       # Build
       - name: Build project
