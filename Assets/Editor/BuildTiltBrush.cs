@@ -47,6 +47,7 @@ static class BuildTiltBrush {
     public string Location;
     public string Stamp;
     public BuildOptions UnityOptions;
+    public bool Github;
   }
 
   [Serializable()]
@@ -264,6 +265,7 @@ static class BuildTiltBrush {
       UnityOptions = GuiDevelopment
         ? (BuildOptions.AllowDebugging | BuildOptions.Development)
         : BuildOptions.None,
+      Github = false,
     };
   }
 
@@ -635,6 +637,8 @@ static class BuildTiltBrush {
           tiltOptions.VrSdk = AsEnum(mode, tiltOptions.VrSdk);
         } else if (args[i] == "-btb-experimental") {
           tiltOptions.Experimental = true;
+        } else if (args[i] == "-btb-github") {
+          tiltOptions.Github = true;
         } else if (args[i] == "-btb-il2cpp") {
           tiltOptions.Il2Cpp = true;
         } else if (args[i] == "-btb-bopt") {
@@ -763,16 +767,21 @@ static class BuildTiltBrush {
     private string m_name;
     private string m_company;
     private bool m_isAndroid;
-    public TempSetAppNames(bool isAndroid) {
+    public TempSetAppNames(bool isAndroid, bool isGithub) {
       m_isAndroid = isAndroid;
       m_identifier = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
       m_name = PlayerSettings.productName;
       m_company = PlayerSettings.companyName;
-      if (m_isAndroid) {
-        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,
-                                                App.kGuiBuildAndroidApplicationIdentifier);
+      string new_name = App.kAppDisplayName;
+      string new_identifier = App.kGuiBuildAndroidApplicationIdentifier;
+      if (isGithub) {
+        new_name += " (Github)";
+        new_identifier += "-github";
       }
-      PlayerSettings.productName = App.kAppDisplayName;
+      if (m_isAndroid) {
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, new_identifier);
+      }
+      PlayerSettings.productName = new_name;
       PlayerSettings.companyName = App.kDisplayVendorName;
     }
 
@@ -1009,7 +1018,7 @@ static class BuildTiltBrush {
     using (var unused4 = new TempHookUpSingletons())
     using (var unused5 = new TempSetScriptingBackend(target, tiltOptions.Il2Cpp))
     using (var unused6 = new TempSetBundleVersion(App.Config.m_VersionNumber, stamp))
-    using (var unused10 = new TempSetAppNames(target == BuildTarget.Android))
+    using (var unused10 = new TempSetAppNames(target == BuildTarget.Android, tiltOptions.Github))
     using (var unused7 = new RestoreVrSdks())
     using (var unused9 = new RestoreFileContents(
                Path.Combine(Path.GetDirectoryName(Application.dataPath),
