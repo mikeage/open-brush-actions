@@ -78,11 +78,11 @@ jobs:
         with:
           path: Library
           # Adding the sha ensures that we always save it (by default cache hits are not saved, even if it's just a base and it's updated, which is not what we want)
-          key: Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-${{ github.sha }}
+          key: Library-${{ matrix.targetPlatform }}-${{ github.sha }}
           # When we load, take the 'latest' one that matches. Worst case, it's slightly out of date. Still better than nothing.
           restore-keys: |
-            Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-
             Library-${{ matrix.targetPlatform }}-
+            Library-
 
       - name: Update Oculus OVR Plugin
         uses: game-ci/unity-builder@v2.0-alpha-6
