@@ -3,7 +3,7 @@ name: Unity tests
 
 on:
   pull_request: {}
-  # push: { branches: [main] }
+  push: {branches: [main]}
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -30,16 +30,16 @@ jobs:
             extraoptions: ''
 
     steps:
-      # Checkout
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          lfs: true
+          lfs: true  # We don't use LFS, but it adds no time, and leave it here in case we do at some point later
 
       - name: Install Oculus unity package
         if: matrix.vrsdk == 'Oculus'
         run: |
           # version 23.1
+          # Code courtesy of Jonathan Perret, released freely. Download the package and manually extract it to Assets/Oculus. We only need VR and Platform.
           wget -q https://securecdn.oculus.com/binaries/download/?id=3884880558189851 -O package.tmp
           mkdir tmp
           tar -C tmp -xzf package.tmp
@@ -59,26 +59,24 @@ jobs:
           rm -rf tmp package.tmp
           ln -s ../../Assets/Oculus/VR/Editor/OVRPluginUpdater.cs Assets/Editor/
 
-      # Cache
       - uses: actions/cache@v2
         with:
           path: Library
-          # Adding the sha ensures that we always save it... but we'll load the 'latest' one
+          # Adding the sha ensures that we always save it (by default cache hits are not saved, even if it's just a base and it's updated, which is not what we want)
           key: Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-${{ github.sha }}
+          # When we load, take the 'latest' one that matches. Worst case, it's slightly out of date. Still better than nothing.
           restore-keys: |
             Library-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}-
             Library-${{ matrix.targetPlatform }}-
 
-      - name: Update Oculus Plugin
+      - name: Update Oculus OVR Plugin
         uses: game-ci/unity-builder@v2.0-alpha-6
         if: matrix.vrsdk == 'Oculus'
         with:
-          allowDirtyBuild: true
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildMethod: OVRPluginUpdater.BatchmodePluginUpdate
+          buildMethod: OVRPluginUpdater.BatchmodePluginUpdate  # We created this symlink above
 
-      # Build
       - name: Build project
         uses: game-ci/unity-builder@v2.0-alpha-6
         with:
@@ -88,40 +86,13 @@ jobs:
           customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }} ${{ matrix.extraoptions }}'
           buildMethod: BuildTiltBrush.CommandLine
 
-      # Build
-      # (experiment; maybe this will help with the imports)
-      - name: Rebuild project
-        # if: matrix.vrsdk == 'Oculus'
-        if: false
-        uses: game-ci/unity-builder@v2.0-alpha-6
-        with:
-          allowDirtyBuild: true
-          unityVersion: 2019.4.18f1
-          targetPlatform: ${{ matrix.targetPlatform }}
-          customParameters: '-btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.${{ matrix.extension }} ${{ matrix.extraoptions }}'
-          buildMethod: BuildTiltBrush.CommandLine
-
-      - name: Show local changes
-        run: |
-          echo "git status"
-          git status
-          echo "git diff"
-          git diff
-          echo "git status --ignored"
-          git status --ignored
-          echo "OVRBuildConfig.asset"
-          [ -f Assets/Resources/OVRBuildConfig.asset ] && cat Assets/Resources/OVRBuildConfig.asset || true
-          echo "OVRPlatformToolSettings.asset"
-          [ -f Assets/Resources/OVRPlatformToolSettings.asset ] && cat Assets/Resources/OVRPlatformToolSettings.asset || true
-
-      # Output
       - name: Upload build/
         uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}
           path: build
 
-      - name: Upload the full tree
+      - name: Upload the full tree for debugging
         uses: actions/upload-artifact@v2
         if: false
         with:
