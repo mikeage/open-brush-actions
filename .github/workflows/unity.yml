@@ -98,19 +98,18 @@ jobs:
           allowDirtyBuild: true
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
-          # The -btb-out path must be in the form of build/targetPlatform, because that's what's passed as customBuildPath as well. TODO: fix this
-          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.out -btb-github ${{ matrix.extraoptions }}
+          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.out -btb-github ${{ matrix.extraoptions }}
           buildMethod: BuildTiltBrush.CommandLine
 
       - name: Rename output file (for Windows)
         if: matrix.targetPlatform == 'StandaloneWindows64'
         run:
-          mv /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.exe
+          mv /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.exe
 
       - name: Rename output file (for Android)
         if: matrix.targetPlatform == 'Android'
         run:
-          mv /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}/com.Icosa.OpenBrush-github.apk
+          mv /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/com.Icosa.OpenBrush-github.apk
 
       - name: Upload build/
         uses: actions/upload-artifact@v2
