@@ -103,12 +103,12 @@ jobs:
           buildMethod: BuildTiltBrush.CommandLine
 
       - name: Rename output file (for Windows)
-        if: ${{ matrix.targetPlatform }} == "StandaloneWindows64"
+        if: matrix.targetPlatform == 'StandaloneWindows64'
         run:
           mv /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.exe
 
       - name: Rename output file (for Android)
-        if: ${{ matrix.targetPlatform }} == "Android"
+        if: matrix.targetPlatform == 'Android'
         run:
           mv /github/workspace/build/${{ matrix.targetPlatform }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}/com.Icosa.OpenBrush-github.apk
 
