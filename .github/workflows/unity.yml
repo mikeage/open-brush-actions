@@ -92,24 +92,29 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: OVRPluginUpdater.BatchmodePluginUpdate  # We created this symlink above
 
+      - name: Set filename (for Windows)
+        if: matrix.targetPlatform == 'StandaloneWindows64'
+        run:
+          echo "filename=OpenBrush-github.exe" >> $GITHUB_ENV
+
+      - name: Set filename (for Linux)
+        if: matrix.targetPlatform == 'StandaloneLinux64'
+        run:
+          echo "filename=OpenBrush-github" >> $GITHUB_ENV
+
+      - name: Set filename (for Android)
+        if: matrix.targetPlatform == 'Android'
+        run:
+          echo "filename=com.Icosa.OpenBrushgithub.apk" >> $GITHUB_ENV
+
       - name: Build project
         uses: game-ci/unity-builder@v2.0-alpha-6
         with:
           allowDirtyBuild: true
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
-          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.out -btb-github ${{ matrix.extraoptions }}
+          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }} -btb-github ${{ matrix.extraoptions }}
           buildMethod: BuildTiltBrush.CommandLine
-
-      - name: Rename output file (for Windows)
-        if: matrix.targetPlatform == 'StandaloneWindows64'
-        run:
-          mv /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.exe
-
-      - name: Rename output file (for Android)
-        if: matrix.targetPlatform == 'Android'
-        run:
-          mv /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/OpenBrush.out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/com.Icosa.OpenBrush-github.apk
 
       - name: Upload build/
         uses: actions/upload-artifact@v2
