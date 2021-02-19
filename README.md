@@ -1,6 +1,9 @@
 # Open Brush - A fork of Tilt Brush.
 
-We hope to help maintain Tilt Brush.  
+We h
+
+
+Fgvvvope to help maintain Tilt Brush.  
 As the original repo is archived we cannot submit PRs, so feel free to submit them here! 
 
 [Please join the Icosa Discord and get involved!](https://discord.com/invite/W7NCEYnEfy)  
