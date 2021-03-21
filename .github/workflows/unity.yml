@@ -7,45 +7,7 @@ on:
 
 env:
   #UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-  UNITY_LICENSE: |
-    <?xml version="1.0" encoding="UTF-8"?><root>
-    <License id="Terms">
-    <MachineBindings>
-    <Binding Key="1" Value="576562626572264761624c65526f7578"/>
-    <Binding Key="2" Value="576562626572264761624c65526f7578"/>
-    </MachineBindings>
-    <MachineID Value="D7nTUnjNAmtsUMcnoyrqkgIbYdM="/>
-    <SerialHash Value="56bce8b03146a1a47339b2bc8a7a40af276146b9"/>
-    <Features>
-    <Feature Value="33"/>
-    <Feature Value="1"/>
-    <Feature Value="12"/>
-    <Feature Value="2"/>
-    <Feature Value="24"/>
-    <Feature Value="3"/>
-    <Feature Value="36"/>
-    <Feature Value="17"/>
-    <Feature Value="19"/>
-    <Feature Value="62"/>
-    </Features>
-    <DeveloperData Value="AQAAAEY0LURFWjQtVVk1TS04M1lULTNOWVAtNEtXNg=="/>
-    <SerialMasked Value="F4-DEZ4-UY5M-83YT-3NYP-XXXX"/>
-    <StartDate Value="2021-01-27T00:00:00"/>
-    <UpdateDate Value="2021-03-22T06:52:26"/>
-    <InitialActivationDate Value="2021-01-27T07:00:51"/>
-    <LicenseVersion Value="6.x"/>
-    <ClientProvidedVersion Value="2019.4.18f1"/>
-    <AlwaysOnline Value="false"/>
-    <Entitlements>
-    <Entitlement Ns="unity_editor" Tag="UnityPersonal" Type="EDITOR" ValidTo="9999-12-31T00:00:00"/>
-    <Entitlement Ns="unity_editor" Tag="DarkSkin" Type="EDITOR_FEATURE" ValidTo="9999-12-31T00:00:00"/>
-    </Entitlements>
-    </License>
-    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#Terms"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>x0hX1rye403sFkaeeR1RIfZWlG4=</DigestValue></Reference></SignedInfo><SignatureValue>y5v1zYNSgQK6TXizbMeuiVggaBHjbYFiheZzj7tRLRV2vWoaXffKqX8cYB2kJ5fk4G8r5bGxoBkf
-    VmwODz3czN9CXE6QHbdBEVNOj3Ee7LFezKphXG716VZFigCII3ZZdFxI5bX2mByl8wwnZd24NVyV
-    9hArU1yiWqgmq707FUx6xDn0CgMdlhMUhkahnCEGj9cf4MDY9DBQyo7s1SWWuBZOnKVsNvq/u5Lc
-    72s4qs4FdrwUzrZaDi8AmQW2fbobB7yCrjAb5wQIGNzXTfj6k3l9C5vJjrHb8j3oei05YU8QYyGE
-    5PVqjzkktM/ilp2x6aE50x01Y1Cla95IYdSQeA==</SignatureValue></Signature></root>
+  UNITY_LICENSE: "<?xml version="1.0" encoding="UTF-8"?><root>\n<License id="Terms">\n<MachineBindings>\n<Binding Key="1" Value="576562626572264761624c65526f7578"/>\n<Binding Key="2" Value="576562626572264761624c65526f7578"/>\n</MachineBindings>\n<MachineID Value="D7nTUnjNAmtsUMcnoyrqkgIbYdM="/>\n<SerialHash Value="56bce8b03146a1a47339b2bc8a7a40af276146b9"/>\n<Features>\n<Feature Value="33"/>\n<Feature Value="1"/>\n<Feature Value="12"/>\n<Feature Value="2"/>\n<Feature Value="24"/>\n<Feature Value="3"/>\n<Feature Value="36"/>\n<Feature Value="17"/>\n<Feature Value="19"/>\n<Feature Value="62"/>\n</Features>\n<DeveloperData Value="AQAAAEY0LURFWjQtVVk1TS04M1lULTNOWVAtNEtXNg=="/>\n<SerialMasked Value="F4-DEZ4-UY5M-83YT-3NYP-XXXX"/>\n<StartDate Value="2021-01-27T00:00:00"/>\n<UpdateDate Value="2021-03-22T06:52:26"/>\n<InitialActivationDate Value="2021-01-27T07:00:51"/>\n<LicenseVersion Value="6.x"/>\n<ClientProvidedVersion Value="2019.4.18f1"/>\n<AlwaysOnline Value="false"/>\n<Entitlements>\n<Entitlement Ns="unity_editor" Tag="UnityPersonal" Type="EDITOR" ValidTo="9999-12-31T00:00:00"/>\n<Entitlement Ns="unity_editor" Tag="DarkSkin" Type="EDITOR_FEATURE" ValidTo="9999-12-31T00:00:00"/>\n</Entitlements>\n</License>\n<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#Terms"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>x0hX1rye403sFkaeeR1RIfZWlG4=</DigestValue></Reference></SignedInfo><SignatureValue>y5v1zYNSgQK6TXizbMeuiVggaBHjbYFiheZzj7tRLRV2vWoaXffKqX8cYB2kJ5fk4G8r5bGxoBkf\nVmwODz3czN9CXE6QHbdBEVNOj3Ee7LFezKphXG716VZFigCII3ZZdFxI5bX2mByl8wwnZd24NVyV\n9hArU1yiWqgmq707FUx6xDn0CgMdlhMUhkahnCEGj9cf4MDY9DBQyo7s1SWWuBZOnKVsNvq/u5Lc\n72s4qs4FdrwUzrZaDi8AmQW2fbobB7yCrjAb5wQIGNzXTfj6k3l9C5vJjrHb8j3oei05YU8QYyGE\n5PVqjzkktM/ilp2x6aE50x01Y1Cla95IYdSQeA==</SignatureValue></Signature></root>"
 
 jobs:
   build:
