@@ -127,6 +127,13 @@ jobs:
           else
             echo "No value for git describe found!"
           fi
+      - name: Set custom keystore
+        # TODO changeme
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          grep androidUseCustomKeystore ProjectSettings/ProjectSettings.asset
+          sed -e 's/androidUseCustomKeystore.*$/androidUseCustomKeystore: 1/' -i ProjectSettings/ProjectSettings.asset
+          grep androidUseCustomKeystore ProjectSettings/ProjectSettings.asset
 
       - name: Build project (pull request)
         uses: game-ci/unity-builder@v2.0-alpha-6
