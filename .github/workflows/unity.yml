@@ -128,14 +128,36 @@ jobs:
             echo "No value for git describe found!"
           fi
 
-      - name: Build project
+      - name: Build project (pull request)
         uses: game-ci/unity-builder@v2.0-alpha-6
+        if: ${{ github.event_name == 'pull_request' }}
         with:
           allowDirtyBuild: true  # Because of the OVR Update, the build tree might be dirty
           unityVersion: 2019.4.18f1
           targetPlatform: ${{ matrix.targetPlatform }}
           customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }} -btb-github ${{ env.stamp }} ${{ matrix.extraoptions }}
           buildMethod: BuildTiltBrush.CommandLine
+          androidKeystoreName: openbrush.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+
+      - name: Build project (release)
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        if: ${{ github.event_name == 'push' }}
+        with:
+          allowDirtyBuild: true  # Because of the OVR Update, the build tree might be dirty
+          unityVersion: 2019.4.18f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }} -btb-github ${{ env.stamp }} ${{ matrix.extraoptions }}
+          buildMethod: BuildTiltBrush.CommandLine
+          androidKeystoreName: openbrush.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+
 
       - name: Set executable permissions (for OSX)
         if: matrix.targetPlatform == 'StandaloneOSX'
