@@ -129,7 +129,7 @@ jobs:
           fi
       - name: Set custom keystore
         # TODO changeme
-        if: ${{ github.event_name == 'pull_request' }}
+        #if: ${{ github.event_name == 'pull_request' }}
         run: |
           grep androidUseCustomKeystore ProjectSettings/ProjectSettings.asset
           sed -e 's/androidUseCustomKeystore.*$/androidUseCustomKeystore: 1/' -i ProjectSettings/ProjectSettings.asset
@@ -145,10 +145,10 @@ jobs:
           customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }} -btb-github ${{ env.stamp }} ${{ matrix.extraoptions }}
           buildMethod: BuildTiltBrush.CommandLine
           androidKeystoreName: openbrush.keystore
-          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
-          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
-          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          androidKeystoreBase64: ${{ secrets.xANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.xANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.xANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.xANDROID_KEYALIAS_PASS }}
 
       - name: Build project (release)
         uses: game-ci/unity-builder@v2.0-alpha-6
