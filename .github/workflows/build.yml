@@ -3,7 +3,7 @@ name: Builds
 
 on:
   pull_request: {}
-  push: {branches: [main]}
+  push: {}
 
 env:
   #UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -11,6 +11,15 @@ env:
 
 jobs:
   build:
+    if: |
+      ( github.event_name == 'pull_request' ) ||
+      (
+        github.event_name == 'push' &&
+        (
+        github.ref == 'refs/heads/main' ||
+        contains(github.event.head_commit.message, '[CI BUILD]')
+        )
+      )
     name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     strategy:
