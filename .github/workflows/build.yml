@@ -231,6 +231,10 @@ jobs:
           echo "$SECRETS_ASSET_META" > Assets/Secrets.asset.meta
           SECRETS_ASSET_META_GUID=$(grep "guid:" Assets/SecretsExample.asset.meta | cut -d" " -f2)
           sed -e "s/Secrets:.*$/Secrets: {fileID: 11400000, guid: $SECRETS_ASSET_META_GUID, type: 2}/" -i Assets/Scenes/Main.unity
+          cat Assets/Secrets.asset
+          cat Assets/Secrets.asset.meta
+          cat Assets/Scenes/Main.unity
+          git diff
 
       - name: Enable the use of a custom keystore
         env:
