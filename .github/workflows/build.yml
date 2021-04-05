@@ -300,8 +300,10 @@ jobs:
           # (The chmod itself is also attempted in the unity-builder image, but because the paths don't match, they don't find our filename)
           docker run -v $(pwd)/build:/mnt alpine chown $(id -u).$(id -g) -R /mnt/
           chmod a+x build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }}/Contents/MacOS/*
+          # Remove empty directories (artifact of the unity-builder action)
+          rmdir build/* || true
           # Compress, but skip the top directories
-          tar -c -v -z --strip-components=2 -f OpenBrush.tgz build/${{ matrix.targetPlatform}}-${{ matrix.vrsdk }}
+          tar -c -v -z -f OpenBrush.tgz -C build ${{ matrix.targetPlatform}}-${{ matrix.vrsdk }}
           rm -rf build/*
           mv OpenBrush.tgz build/
 
