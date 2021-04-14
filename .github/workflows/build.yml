@@ -68,7 +68,7 @@ jobs:
       - name: Calculate Changelog
         id: changelog
         env:
-          PRERELEASE: ${{ steps.configuration.outputs.prerelease }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
         run: |
           if [ "$PRERELEASE" == "true" ]
           then
@@ -84,7 +84,7 @@ jobs:
       - name: Set github suffix if relevant
         id: github
         env:
-          PRERELEASE: ${{ steps.configuration.outputs.prerelease }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
         run: |
           if [ "$PRERELEASE" == "true" ]
           then
