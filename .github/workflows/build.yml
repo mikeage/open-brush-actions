@@ -327,7 +327,6 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' &&
-      github.repository == 'icosa-gallery/open-brush' &&
       (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/v'))
 
     strategy:
