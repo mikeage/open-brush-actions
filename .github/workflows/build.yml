@@ -97,15 +97,15 @@ jobs:
           else
             if [[ ${{ github.ref}} == refs/pull/* ]]
             then
-              DESCRIPTION="PR #$(echo ${{ github.ref }} | sed -e 's#refs/pull/##' -e 's#/merge##')"
+              DESCRIPTION="PR#$(echo ${{ github.ref }} | sed -e 's#refs/pull/##' -e 's#/merge##')"
             elif [[ ${{ github.ref}} == refs/heads/* ]]
             then
-              DESCRIPTION="Branch $(echo ${{ github.ref }} | sed -e 's#refs/heads/##')"
+              DESCRIPTION="$(echo ${{ github.ref }} | sed -e 's#refs/heads/##')"
             else
               DESCRIPTION="Unknown"
             fi
             echo "::set-output name=description::-btb-description ${DESCRIPTION}"
-            IDENTIFIER=$(echo ${DESCRIPTION} | sed -e 's/[ #_-]//g')
+            IDENTIFIER=$(echo ${DESCRIPTION} | sed -e 's/[#_-]//g')
             echo "::set-output name=basename::OpenBrush-${IDENTIFIER}"
           fi
   build:
@@ -307,7 +307,7 @@ jobs:
           allowDirtyBuild: true  # Because of the OVR Update, the build tree might be dirty
           unityVersion: ${{ env.UNITY_VERSION }}
           targetPlatform: ${{ matrix.targetPlatform }}
-          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }} "${{ needs.configuration.outputs.description}}" ${{ env.stamp }} ${{ matrix.extraoptions }}
+          customParameters: -btb-target ${{ matrix.targetPlatform }} -btb-display ${{ matrix.vrsdk }} -btb-out /github/workspace/build/${{ matrix.targetPlatform }}-${{ matrix.vrsdk }}/${{ env.filename }} ${{ needs.configuration.outputs.description}} ${{ env.stamp }} ${{ matrix.extraoptions }}
           versioning: Custom
           version: ${{ needs.configuration.outputs.version }}
           buildMethod: BuildTiltBrush.CommandLine
